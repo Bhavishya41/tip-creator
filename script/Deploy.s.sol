@@ -11,19 +11,27 @@ contract DeployProductSystem is Script {
         address mockUsd = vm.envAddress("MOCK_USD_ADDRESS");
         address treasury = vm.envAddress("PROTOCOL_TREASURY");
 
+        // Fetch the backend public signer address to back our claim engine
+        address trustedSigner = vm.envAddress("TRUSTED_SIGNER");
+
         // Guardrails to prevent null-address initialization
         require(mockUsd != address(0), "Invalid Mock USD configuration");
         require(treasury != address(0), "Invalid Treasury configuration");
+        require(
+            trustedSigner != address(0),
+            "Invalid Trusted Signer configuration"
+        );
 
         console.log("Initializing deployment utilizing deployer signature...");
 
         // 2. Open signature broadcasting window
         vm.startBroadcast(deployerPrivateKey);
 
-        // 3. System execution
+        // 3. System execution - Passing all 3 production parameters
         CreatorTokenFactory factory = new CreatorTokenFactory(
             mockUsd,
-            treasury
+            treasury,
+            trustedSigner
         );
 
         console.log(

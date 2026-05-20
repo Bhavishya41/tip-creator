@@ -12,14 +12,16 @@ contract CreatorTokenFactory {
     address public protocolTreasury;
     uint256 public protocolFeeBPS = 500; // 5%
     uint256 public curveMultiplier = 1e18; // Bonding curve slope
+    address public trustedSigner;
 
     mapping(string => address) public handleToToken;
     mapping(string => uint256) public handleReserve;
     mapping(string => uint256) public handleSupply;
 
-    constructor(address _mockUsd, address _treasury) {
+    constructor(address _mockUsd, address _treasury, address _signer) {
         mockUsd = IERC20(_mockUsd);
         protocolTreasury = _treasury;
+        trustedSigner = _signer;
     }
 
     function tipAndMint(string memory _handle, uint256 _tipAmount) external {
